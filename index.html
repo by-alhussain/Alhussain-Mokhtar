@@ -248,6 +248,48 @@ section{scroll-margin-top:72px}
 .grid li:nth-child(6n+5) .frame{--tilt:-.7deg;--tape:var(--peach);--tape-r:-5deg}
 .grid li:nth-child(6n) .frame{--tilt:.5deg;--tape:var(--butter);--tape-r:4deg}
 
+
+/* ---------- contact ---------- */
+.contact{--band:var(--peach-soft);padding-block:clamp(80px,9vw,124px)}
+.contact-grid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:clamp(36px,6vw,80px);align-items:start}
+.contact-copy{display:flex;flex-direction:column;gap:22px}
+.contact-copy .section-head{margin-bottom:0}
+.contact-copy .section-head p{max-width:44ch}
+.reasons{display:flex;flex-direction:column;gap:14px}
+.reasons li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start}
+.reasons .dot{width:38px;height:38px;border-radius:14px;background:var(--c);display:grid;place-items:center}
+.reasons .dot svg{width:20px;height:20px}
+.reasons b{display:block;font-weight:800;line-height:1.3}
+.reasons span.d{display:block;color:var(--cocoa-soft);font-size:.98rem;line-height:1.5}
+.mail{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:16px 18px;border-radius:22px;background:var(--paper);box-shadow:var(--shadow),0 0 0 1px var(--line)}
+.mail-label{flex:0 0 100%;font-weight:800;font-size:.8rem;letter-spacing:.13em;text-transform:uppercase;color:var(--cocoa-soft)}
+.mail-addr{font-family:var(--font-display);font-variation-settings:'SOFT' 100;font-weight:650;font-size:clamp(1.1rem,3.6vw,1.35rem);letter-spacing:-.01em;text-decoration:none;overflow-wrap:anywhere;border-bottom:2px dotted var(--pink);transition:color .3s,border-color .3s}
+.mail-addr:hover{color:var(--berry);border-color:var(--berry)}
+.copy{margin-left:auto;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border:0;border-radius:999px;background:var(--butter);font-weight:800;font-size:.92rem;cursor:pointer;transition:transform .4s var(--ease),background .3s}
+.copy:hover{transform:translateY(-2px)}
+.copy svg{width:16px;height:16px}
+.form-card{padding:clamp(22px,4vw,36px);border-radius:32px;background:var(--paper);box-shadow:var(--shadow-lg),0 0 0 1px var(--line)}
+.form-card h3{font-family:var(--font-display);font-variation-settings:'SOFT' 100;font-weight:650;font-size:1.6rem;letter-spacing:-.015em;margin-bottom:18px}
+.form-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;min-width:0}
+.field label{font-weight:800;font-size:.9rem}
+.field input,.field select,.field textarea{
+  width:100%;font:inherit;font-size:1rem;color:var(--cocoa);background:var(--cream);
+  padding:13px 16px;min-height:52px;border-radius:16px;border:2px solid rgba(101,83,75,.18);
+  transition:border-color .3s,box-shadow .3s,background .3s;
+}
+.field textarea{min-height:150px;resize:vertical;line-height:1.55}
+.field select{appearance:none;-webkit-appearance:none;padding-right:44px;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2365534B' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center}
+.field input::placeholder,.field textarea::placeholder{color:#9A8880}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:rgba(101,83,75,.35)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--berry);box-shadow:0 0 0 4px rgba(156,92,88,.18);background:#fff}
+.form-foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin-top:4px}
+.form-status{flex:1 1 220px;font-size:.95rem;line-height:1.5;color:var(--cocoa-soft);margin:0}
+.form-status a{color:var(--berry);font-weight:800}
+.form-status:empty{display:none}
+
 /* ---------- social ---------- */
 .social{--band:var(--lav-soft);padding-block:clamp(80px,9vw,124px) 40px}
 .social-head{align-items:center;text-align:center}
@@ -305,7 +347,7 @@ html.lb-open{overflow:hidden}
 @media (max-width:860px){
   .hero-grid{grid-template-columns:minmax(0,1fr)}
   .hero-art-wrap{width:min(100%,360px);margin-top:14px}
-  .about-grid{grid-template-columns:minmax(0,1fr)}
+  .about-grid,.contact-grid{grid-template-columns:minmax(0,1fr)}
   .about-copy{order:-1}
   .sketch{width:min(100%,340px)}
   .d1{left:auto;right:6%;top:2%}
@@ -317,6 +359,8 @@ html.lb-open{overflow:hidden}
   nav a{padding:8px 11px;font-size:.9rem}
   .brand svg{display:none}
   .btn{flex:1 1 100%}
+  .form-row{grid-template-columns:minmax(0,1fr);gap:0}
+  .copy{margin-left:0}
   .soc{grid-template-columns:auto minmax(0,1fr);padding:20px}
   .soc-go{display:none}
   .soc-ico{width:60px;height:60px;border-radius:20px}
@@ -344,7 +388,7 @@ html.lb-open{overflow:hidden}
     <nav aria-label="Main">
       <a href="#about" data-go>About</a>
       <a href="#artwork" data-go>Artwork</a>
-      <a href="#hi" data-go>Say hi</a>
+      <a href="#contact" data-go>Contact</a>
     </nav>
   </div>
 </header>
@@ -426,6 +470,57 @@ html.lb-open{overflow:hidden}
     </div>
   </section>
 
+  <!-- ============ CONTACT ============ -->
+  <section class="contact band" id="contact" aria-labelledby="contact-title">
+    <div class="wrap contact-grid">
+      <div class="contact-copy reveal">
+        <div class="section-head">
+          <span class="hand">get in touch</span>
+          <h2 id="contact-title">Let's work together</h2>
+          <p>I'm open to hiring opportunities, internships and commissions. If you have a team, a project or an idea you'd like to bring to life, I'd love to hear from you.</p>
+        </div>
+        <ul class="reasons">
+          <li><span class="dot" style="--c:var(--butter)"><svg viewBox="0 0 24 24" fill="none" stroke="#65534B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg></span><div><b>Hiring</b><span class="d">Studios and teams looking for a character designer.</span></div></li>
+          <li><span class="dot" style="--c:var(--sage)"><svg viewBox="0 0 24 24" fill="none" stroke="#65534B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="M6 10.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-5.5"/></svg></span><div><b>Internships</b><span class="d">Opportunities to grow in character design and animation.</span></div></li>
+          <li><span class="dot" style="--c:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="#65534B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><div><b>Commissions</b><span class="d">Custom character designs and illustrations.</span></div></li>
+        </ul>
+        <div class="mail">
+          <span class="mail-label">Email</span>
+          <a class="mail-addr" id="mailAddr" href="mailto:alhussainbassem@gmail.com">alhussainbassem@gmail.com</a>
+          <button class="copy" id="copyMail" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+            <span id="copyLabel">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <form class="form-card reveal" id="contactForm" style="--d:.12s" novalidate>
+        <h3>Send me a message</h3>
+        <div class="form-row">
+          <div class="field"><label for="cName">Your name</label><input id="cName" name="name" type="text" autocomplete="name" placeholder="Jane Doe" required></div>
+          <div class="field"><label for="cEmail">Your email</label><input id="cEmail" name="email" type="email" autocomplete="email" placeholder="jane@studio.com" required></div>
+        </div>
+        <div class="field">
+          <label for="cReason">I'm reaching out about</label>
+          <select id="cReason" name="reason" required>
+            <option value="Hiring">Hiring</option>
+            <option value="Internship">An internship</option>
+            <option value="Commission">A commission</option>
+            <option value="Collaboration">A collaboration</option>
+            <option value="Something else">Something else</option>
+          </select>
+        </div>
+        <div class="field"><label for="cMsg">Message</label><textarea id="cMsg" name="message" placeholder="Tell me a little about your project, team or idea." required></textarea></div>
+        <div class="form-foot">
+          <button class="btn" type="submit">Send message
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+    </div>
+  </section>
+
   <!-- ============ SOCIAL ============ -->
   <section class="social band" id="hi" aria-labelledby="hi-title">
     <div class="wrap">
@@ -438,6 +533,7 @@ html.lb-open{overflow:hidden}
       <div class="soc-mascot" id="mascot" aria-hidden="true"></div>
       <footer class="foot">
         <b>thanks for visiting!</b>
+        <a href="mailto:alhussainbassem@gmail.com" style="text-decoration:none">alhussainbassem@gmail.com</a>
         <span>© <span id="year">2026</span> Alhussain Mokhtar</span>
       </footer>
     </div>
@@ -664,6 +760,36 @@ let sx=null;
 $('#lbFig').addEventListener('pointerdown',e=>{sx=e.clientX});
 $('#lbFig').addEventListener('pointerup',e=>{if(sx!==null&&Math.abs(e.clientX-sx)>60)go(e.clientX<sx?1:-1);sx=null});
 
+
+/* ---- contact form: opens the visitor's email app (or Gmail) with the message ready to send ---- */
+const EMAIL='alhussainbassem@gmail.com';
+(function contact(){
+  const form=$('#contactForm'),status=$('#formStatus');
+  const copyBtn=$('#copyMail'),copyLabel=$('#copyLabel');
+  copyBtn.addEventListener('click',async()=>{
+    let ok=false;
+    try{await navigator.clipboard.writeText(EMAIL);ok=true}catch(e){
+      const r=document.createRange();r.selectNodeContents($('#mailAddr'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);
+    }
+    copyLabel.textContent=ok?'Copied!':'Press Ctrl+C';
+    setTimeout(()=>copyLabel.textContent='Copy',2200);
+  });
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    if(!form.checkValidity()){form.reportValidity();return}
+    const f=new FormData(form),name=f.get('name').trim(),from=f.get('email').trim(),reason=f.get('reason'),msg=f.get('message').trim();
+    const subject=`Portfolio inquiry: ${reason} (${name})`;
+    const body=`Hi Alhussain,\n\n${msg}\n\nBest regards,\n${name}\n${from}`;
+    const q=`subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const gmail=`https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&${q}`;
+    status.replaceChildren(
+      document.createTextNode(`Thanks, ${name}! Your email app should open with your message ready to send. `),
+      el('span',{html:`No luck? <a href="${gmail}" target="_blank" rel="noopener noreferrer">Open it in Gmail</a> or write to ${EMAIL}.`})
+    );
+    location.href=`mailto:${EMAIL}?${q}`;
+  });
+})();
+
 /* ---- smooth scroll nav (no hash changes, so the link stays clean) ---- */
 document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',e=>{
   const t=document.getElementById(a.getAttribute('href').slice(1));
@@ -681,7 +807,7 @@ const links=[...document.querySelectorAll('nav a')];
 const so=new IntersectionObserver(es=>es.forEach(x=>{
   if(x.isIntersecting)links.forEach(l=>l.setAttribute('aria-current',String(l.getAttribute('href')==='#'+x.target.id)));
 }),{rootMargin:'-45% 0px -50% 0px'});
-['about','artwork','hi'].forEach(id=>so.observe(document.getElementById(id)));
+['about','artwork','contact','hi'].forEach(id=>so.observe(document.getElementById(id)));
 </script>
 
 </body>
