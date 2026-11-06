@@ -796,10 +796,10 @@ const EMAIL='alhussainbassem@gmail.com';
     btn.disabled=true;const label=btn.firstChild.textContent;btn.firstChild.textContent='Sending... ';
     status.textContent='';
     try{
-      /* delivered straight to the inbox by FormSubmit (free service, no account needed) */
-      const r=await fetch('https://formsubmit.co/ajax/'+EMAIL,{
+      /* delivered straight to the inbox by Web3Forms */
+      const r=await fetch('https://api.web3forms.com/submit',{
         method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
-        body:JSON.stringify({name,email:from,reason,message:msg,_subject:subject,_template:'table',_captcha:'false'})
+        body:JSON.stringify({access_key:'8e41f68b-b5a5-477d-9a8e-425571cf3734',subject,from_name:'Portfolio website',name,email:from,reason,message:msg})
       });
       const j=await r.json().catch(()=>({}));
       if(!r.ok||String(j.success)==='false')throw new Error(j.message||'send failed');
