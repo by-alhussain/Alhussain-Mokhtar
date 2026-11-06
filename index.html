@@ -289,6 +289,7 @@ section{scroll-margin-top:72px}
 .form-status{flex:1 1 220px;font-size:.95rem;line-height:1.5;color:var(--cocoa-soft);margin:0}
 .form-status a{color:var(--berry);font-weight:800}
 .form-status:empty{display:none}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 
 /* ---------- social ---------- */
 .social{--band:var(--lav-soft);padding-block:clamp(80px,9vw,124px) 40px}
@@ -511,6 +512,7 @@ html.lb-open{overflow:hidden}
           </select>
         </div>
         <div class="field"><label for="cMsg">Message</label><textarea id="cMsg" name="message" placeholder="Tell me a little about your project, team or idea." required></textarea></div>
+        <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="form-foot">
           <button class="btn" type="submit">Send message
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -774,19 +776,40 @@ const EMAIL='alhussainbassem@gmail.com';
     copyLabel.textContent=ok?'Copied!':'Press Ctrl+C';
     setTimeout(()=>copyLabel.textContent='Copy',2200);
   });
-  form.addEventListener('submit',e=>{
-    e.preventDefault();
-    if(!form.checkValidity()){form.reportValidity();return}
-    const f=new FormData(form),name=f.get('name').trim(),from=f.get('email').trim(),reason=f.get('reason'),msg=f.get('message').trim();
-    const subject=`Portfolio inquiry: ${reason} (${name})`;
-    const body=`Hi Alhussain,\n\n${msg}\n\nBest regards,\n${name}\n${from}`;
+  const btn=form.querySelector('button[type=submit]');
+  const fallback=(name,subject,body)=>{
     const q=`subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     const gmail=`https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&${q}`;
     status.replaceChildren(
-      document.createTextNode(`Thanks, ${name}! Your email app should open with your message ready to send. `),
-      el('span',{html:`No luck? <a href="${gmail}" target="_blank" rel="noopener noreferrer">Open it in Gmail</a> or write to ${EMAIL}.`})
+      document.createTextNode('Sorry, your message could not be sent from here. '),
+      el('span',{html:`Please <a href="${gmail}" target="_blank" rel="noopener noreferrer">open it in Gmail</a> or email me directly at <a href="mailto:${EMAIL}?${q}">${EMAIL}</a>.`})
     );
-    location.href=`mailto:${EMAIL}?${q}`;
+  };
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(!form.checkValidity()){form.reportValidity();return}
+    const f=new FormData(form);
+    if(f.get('_honey'))return; /* spam trap */
+    const name=f.get('name').trim(),from=f.get('email').trim(),reason=f.get('reason'),msg=f.get('message').trim();
+    const subject=`Portfolio inquiry: ${reason} (${name})`;
+    const body=`Hi Alhussain,\n\n${msg}\n\nBest regards,\n${name}\n${from}`;
+    btn.disabled=true;const label=btn.firstChild.textContent;btn.firstChild.textContent='Sending... ';
+    status.textContent='';
+    try{
+      /* delivered straight to the inbox by FormSubmit (free service, no account needed) */
+      const r=await fetch('https://formsubmit.co/ajax/'+EMAIL,{
+        method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
+        body:JSON.stringify({name,email:from,reason,message:msg,_subject:subject,_template:'table',_captcha:'false'})
+      });
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok||String(j.success)==='false')throw new Error(j.message||'send failed');
+      form.reset();
+      status.textContent=`Thank you, ${name}! Your message has been sent. I'll reply to ${from}.`;
+    }catch(err){
+      fallback(name,subject,body);
+    }finally{
+      btn.disabled=false;btn.firstChild.textContent=label;
+    }
   });
 })();
 
