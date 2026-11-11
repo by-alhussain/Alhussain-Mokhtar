@@ -344,6 +344,28 @@ html.lb-open{overflow:hidden}
 .lb-prev{left:max(16px,env(safe-area-inset-left,0px))}
 .lb-next{right:max(16px,env(safe-area-inset-right,0px))}
 
+
+/* ---------- star cursor (only on devices with a real mouse) ---------- */
+.has-star,.has-star *{cursor:none!important}
+.has-star input,.has-star textarea{cursor:text!important}
+.has-star select{cursor:pointer!important}
+.cur{position:fixed;left:0;top:0;z-index:300;width:0;height:0;pointer-events:none;opacity:0;transition:opacity .25s ease}
+.has-star .cur{opacity:1}
+.has-star .cur.hide{opacity:0}
+.cur-tilt{position:absolute;left:-19px;top:-19px;width:38px;height:38px;will-change:transform}
+.cur-star{width:100%;height:100%;transition:transform .4s var(--ease)}
+.cur svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 3px 3px rgba(101,83,75,.28));animation:curPulse 2.8s ease-in-out infinite}
+.cur .body{fill:var(--butter);transition:fill .3s}
+.cur .happy{display:none}
+.cur.hot .cur-star{transform:scale(1.4)}
+.cur.hot .body{fill:var(--pink)}
+.cur.hot .open,.cur.down .open{display:none}
+.cur.hot .happy,.cur.down .happy{display:inline}
+.cur.down .cur-star{transform:scale(.8,.92)}
+.spark{position:fixed;left:0;top:0;z-index:299;pointer-events:none}
+.spark svg{display:block;width:100%;height:100%}
+@keyframes curPulse{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.07) rotate(5deg)}}
+
 /* ---------- responsive ---------- */
 @media (max-width:860px){
   .hero-grid{grid-template-columns:minmax(0,1fr)}
@@ -531,7 +553,15 @@ html.lb-open{overflow:hidden}
         <h2 id="hi-title">Come say hi!</h2>
         <p>My portfolio lives on Instagram. Visit, look around, and leave a hello.</p>
       </div>
-      <ul class="socials reveal" id="socials" style="--d:.1s"></ul>
+      <ul class="socials reveal" id="socials" style="--d:.1s">
+        <li style="display:contents">
+          <a class="soc" href="https://www.instagram.com/by.alhussain/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @by.alhussain, opens in a new tab">
+            <span class="soc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#65534B" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" fill="#65534B" stroke="none"/></svg></span>
+            <span><span class="soc-name">Instagram</span><span class="soc-handle" style="display:block">@by.alhussain</span><span class="soc-blurb" style="display:block">My portfolio lives here. Come visit and say hello.</span></span>
+            <span class="soc-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+          </a>
+        </li>
+      </ul>
       <div class="soc-mascot" id="mascot" aria-hidden="true"></div>
       <footer class="foot">
         <b>thanks for visiting!</b>
@@ -541,6 +571,9 @@ html.lb-open{overflow:hidden}
     </div>
   </section>
 </main>
+
+<!-- star cursor -->
+<div class="cur" id="cur" aria-hidden="true"><div class="cur-tilt" id="curTilt"><div class="cur-star" id="curStar"></div></div></div>
 
 <!-- ============ LIGHTBOX ============ -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer" hidden>
@@ -611,18 +644,19 @@ const ARTWORKS=[
 ];
 
 /* =====================================================================
-   2. EDIT ME: your social links
-   Add more objects to this list whenever you like. They appear automatically.
-   icon: 'instagram' or 'link'
+   2. EDIT ME: more social links
+   Instagram is already built into the page. Add any other links here and
+   they appear next to it automatically.
+   icon: 'link'
    ===================================================================== */
-const SOCIALS=[
-  {name:'Instagram', handle:'@by.alhussain', url:'https://www.instagram.com/by.alhussain/', icon:'instagram', blurb:'My portfolio lives here. Come visit and say hello.'},
+const MORE_SOCIALS=[
   // {name:'ArtStation', handle:'your-name', url:'https://www.artstation.com/your-name', icon:'link', blurb:'Longer projects and process.'},
 ];
 
 /* =====================================================================
    Below here is the machinery. You shouldn't need to touch it.
    ===================================================================== */
+const safe=fn=>{try{fn()}catch(e){console.error(e)}};
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $=(s,r=document)=>r.querySelector(s);
 const el=(tag,attrs={},kids=[])=>{const n=document.createElement(tag);for(const k in attrs){if(k==='text')n.textContent=attrs[k];else if(k==='html')n.innerHTML=attrs[k];else n.setAttribute(k,attrs[k])}kids.forEach(c=>n.append(c));return n};
@@ -632,7 +666,7 @@ const ICONS={
 };
 
 /* ---- hero scene ---- */
-(function hero(){
+safe(function hero(){
   const cloud=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})" fill="${K.cream}"><circle cx="0" cy="0" r="30"/><circle cx="34" cy="-14" r="38"/><circle cx="76" cy="0" r="30"/><rect x="-2" y="0" width="80" height="30" rx="15"/></g>`;
   const flower=(x,y,c)=>`<g><path d="M${x} ${y}v26" stroke="#9FBE95" stroke-width="4" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="9" fill="${c}"/><circle cx="${x}" cy="${y}" r="3.5" fill="#fff"/></g>`;
   const scene=`<svg viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Hand-drawn character with a red flower in his mouth, on a grassy hill under a pastel sky">
@@ -651,10 +685,10 @@ const ICONS={
   $('#aboutImg').alt='A cartoon face with thick eyebrows, blue sunglasses, a big nose and a small goatee on a pink and peach background';
   $('#aboutSticker').alt='Hand-drawn character with a red flower in his mouth';
   $('#mascot').innerHTML=`<img src="${reduce?RUN_STILL:RUN}" alt="" width="520" height="412" decoding="async">`;
-})();
+});
 
 /* click Pip: he hops and sends up a few hearts */
-(function pipHop(){
+safe(function pipHop(){
   const btn=$('#pip'),hopper=$('#hopper');
   const H='<svg viewBox="-28 -28 56 56"><path d="M0 14C-24-2-15-24 0-11 15-24 24-2 0 14Z" fill="#EBCAD4" stroke="#65534B" stroke-width="3" stroke-linejoin="round"/></svg>';
   btn.addEventListener('click',()=>{
@@ -672,10 +706,10 @@ const ICONS={
       h.addEventListener('animationend',()=>h.remove());
     }
   });
-})();
+});
 
 /* ---- floating doodles ---- */
-(function doodles(){
+safe(function doodles(){
   const sp=(c)=>`<svg viewBox="-12 -12 24 24"><path d="M0-10 3-3 10 0 3 3 0 10-3 3-10 0-3-3Z" fill="${c}" stroke="#65534B" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
   const ht=(c)=>`<svg viewBox="-14 -14 28 28"><path d="M0 11C-16-1-10-16 0-7 10-16 16-1 0 11Z" fill="${c}" stroke="#65534B" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
   const sq=`<svg viewBox="0 0 60 26" fill="none" stroke="#9C5C58" stroke-width="3.5" stroke-linecap="round"><path d="M4 14q8-14 14 0t14 0 14 0 8-6"/></svg>`;
@@ -683,11 +717,11 @@ const ICONS={
   const list=[['d1',sp(K.butter)],['d2',ht(K.pink)],['d3',sq],['d4',dot(K.lav)],['d5',sp(K.pink)],['d6',ht(K.butter)]];
   const box=$('#doodles');
   list.forEach(([c,h])=>box.append(el('span',{class:'doodle '+c,html:h})));
-})();
+});
 
 /* ---- gallery ---- */
 const grid=$('#grid');
-ARTWORKS.forEach((a,i)=>{
+safe(()=>ARTWORKS.forEach((a,i)=>{
   const img=el('img',{src:a.thumb||a.src,alt:a.alt||a.title,loading:'lazy',decoding:'async'});
   if(a.w)img.width=a.w; if(a.h)img.height=a.h;
   const view=el('span',{class:'view','aria-hidden':'true',html:'<svg viewBox="0 0 24 24" fill="none" stroke="#65534B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>'});
@@ -697,17 +731,17 @@ ARTWORKS.forEach((a,i)=>{
   const btn=el('button',{class:'art',type:'button','data-i':i,'aria-label':`View ${a.title} larger`},[frame,cap]);
   const li=el('li',{class:'reveal',style:`--d:${(i%3)*.09}s`},[btn]);
   grid.append(li);
-});
+}));
 
 /* ---- social ---- */
-SOCIALS.forEach(s=>{
+safe(()=>MORE_SOCIALS.forEach(s=>{
   const a=el('a',{class:'soc',href:s.url,target:'_blank',rel:'noopener noreferrer','aria-label':`${s.name} ${s.handle}, opens in a new tab`},[
     el('span',{class:'soc-ico',html:ICONS[s.icon]||ICONS.link}),
     el('span',{},[el('span',{class:'soc-name',text:s.name}),el('span',{class:'soc-handle',text:s.handle,style:'display:block'}),el('span',{class:'soc-blurb',text:s.blurb||'',style:'display:block'})]),
     el('span',{class:'soc-go',html:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>'})
   ]);
   $('#socials').append(el('li',{style:'display:contents'},[a]));
-});
+}));
 $('#year').textContent=new Date().getFullYear();
 
 /* ---- lightbox ---- */
@@ -778,7 +812,7 @@ $('#lbFig').addEventListener('pointerup',e=>{if(sx!==null&&Math.abs(e.clientX-sx
 
 /* ---- contact form: opens the visitor's email app (or Gmail) with the message ready to send ---- */
 const EMAIL='alhussainbassem@gmail.com';
-(function contact(){
+safe(function contact(){
   const form=$('#contactForm'),status=$('#formStatus');
   const copyBtn=$('#copyMail'),copyLabel=$('#copyLabel');
   copyBtn.addEventListener('click',async()=>{
@@ -824,7 +858,58 @@ const EMAIL='alhussainbassem@gmail.com';
       btn.disabled=false;btn.firstChild.textContent=label;
     }
   });
-})();
+});
+
+
+/* ---- star cursor: a little star follows the mouse, leaves sparkles, and squishes on click ---- */
+safe(function cursor(){
+  if(!matchMedia('(hover: hover) and (pointer: fine)').matches)return;
+  const cur=$('#cur'),tilt=$('#curTilt'),root=document.documentElement;
+  const pts=Array.from({length:10},(_,i)=>{const a=(-90+i*36)*Math.PI/180,d=i%2?9.6:19;return(d*Math.cos(a)).toFixed(1)+','+(d*Math.sin(a)).toFixed(1)}).join(' ');
+  $('#curStar').innerHTML=`<svg viewBox="-24 -24 48 48"><polygon class="body" points="${pts}" stroke="#65534B" stroke-width="3.4" stroke-linejoin="round"/>
+    <g class="open"><circle cx="-4.6" cy="0.5" r="1.9" fill="#65534B"/><circle cx="4.6" cy="0.5" r="1.9" fill="#65534B"/></g>
+    <g class="happy" fill="none" stroke="#65534B" stroke-width="1.9" stroke-linecap="round"><path d="M-7 1.4q2.4-3 4.8 0M2.2 1.4q2.4-3 4.8 0"/></g>
+    <ellipse cx="-8" cy="4.6" rx="2.6" ry="1.6" fill="#E7A4AC" opacity=".7"/><ellipse cx="8" cy="4.6" rx="2.6" ry="1.6" fill="#E7A4AC" opacity=".7"/>
+    <path d="M-2.4 4.6q2.4 2.6 4.8 0" fill="none" stroke="#65534B" stroke-width="1.7" stroke-linecap="round"/></svg>`;
+  const COLORS=['#F7E8A6','#EBCAD4','#DCD6F2','#D5E2CF','#F6D6C8'];
+  let tx=0,ty=0,x=0,y=0,rot=0,on=false,raf=0,acc=0,lx=0,ly=0,live=0;
+  const spark=(px,py,o={})=>{
+    if(reduce||live>28)return;live++;
+    const c=COLORS[Math.random()*COLORS.length|0],size=o.size||(9+Math.random()*9);
+    const s=el('span',{class:'spark',html:`<svg viewBox="-12 -12 24 24"><path d="M0-10Q1.4-1.4 10 0 1.4 1.4 0 10-1.4 1.4-10 0-1.4-1.4 0-10Z" fill="${c}" stroke="#65534B" stroke-width="1.7" stroke-linejoin="round"/></svg>`});
+    s.style.width=s.style.height=size+'px';s.style.transform=`translate(${px}px,${py}px)`;
+    const dx=o.dx!==undefined?o.dx:Math.random()*20-10,dy=o.dy!==undefined?o.dy:12+Math.random()*18,r=Math.random()*180-90;
+    const at=(a,b,sc,rr)=>`translate(${px+a}px,${py+b}px) translate(-50%,-50%) scale(${sc}) rotate(${rr}deg)`;
+    document.body.append(s);
+    s.animate([{transform:at(0,0,.2,0),opacity:0},{transform:at(dx*.3,dy*.3,1,r/3),opacity:1,offset:.2},{transform:at(dx,dy,0,r),opacity:0}],
+      {duration:o.life||(650+Math.random()*350),easing:'cubic-bezier(.22,1,.36,1)'}).onfinish=()=>{s.remove();live--};
+  };
+  const tick=()=>{
+    raf=0;const px=x;
+    if(reduce){x=tx;y=ty}else{x+=(tx-x)*.42;y+=(ty-y)*.42;rot+=(Math.max(-28,Math.min(28,(x-px)*2.4))-rot)*.2;tilt.style.transform=`rotate(${rot.toFixed(1)}deg)`}
+    cur.style.transform=`translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+    if(Math.abs(tx-x)>.15||Math.abs(ty-y)>.15||Math.abs(rot)>.2)raf=requestAnimationFrame(tick);
+  };
+  addEventListener('pointermove',e=>{
+    if(e.pointerType==='touch')return;
+    if(!on){on=true;x=lx=e.clientX;y=ly=e.clientY;root.classList.add('has-star')}
+    tx=e.clientX;ty=e.clientY;
+    const t=e.target,field=t.closest&&t.closest('input,textarea,select');
+    cur.classList.toggle('hide',!!field);
+    cur.classList.toggle('hot',!field&&!!(t.closest&&t.closest('a,button,[role="button"],summary,label,.art')));
+    acc+=Math.hypot(tx-lx,ty-ly);lx=tx;ly=ty;
+    if(acc>30){acc=0;spark(x+Math.random()*10-5,y+Math.random()*10-5)}
+    if(!raf)raf=requestAnimationFrame(tick);
+  },{passive:true});
+  addEventListener('pointerdown',e=>{
+    if(!on||e.pointerType==='touch')return;
+    cur.classList.add('down');
+    for(let i=0;i<7;i++){const a=i/7*Math.PI*2+Math.random()*.5,d=30+Math.random()*22;spark(tx,ty,{dx:Math.cos(a)*d,dy:Math.sin(a)*d,size:8+Math.random()*7,life:520})}
+  });
+  addEventListener('pointerup',()=>cur.classList.remove('down'));
+  addEventListener('blur',()=>cur.classList.remove('down'));
+  root.addEventListener('mouseleave',()=>cur.classList.add('hide'));
+});
 
 /* ---- smooth scroll nav (no hash changes, so the link stays clean) ---- */
 document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',e=>{
