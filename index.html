@@ -291,6 +291,8 @@ section{scroll-margin-top:72px}
 .form-status:empty{display:none}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 
+.more{display:flex;justify-content:center;margin-top:clamp(8px,2vw,24px)}
+
 /* ---------- social ---------- */
 .social{--band:var(--lav-soft);padding-block:clamp(80px,9vw,124px) 40px}
 .social-head{align-items:center;text-align:center}
@@ -380,7 +382,6 @@ html.lb-open{overflow:hidden}
   body{font-size:1rem}
   .brand span{font-size:1.08rem}
   nav a{padding:8px 11px;font-size:.9rem}
-  .brand svg{display:none}
   .btn{flex:1 1 100%}
   .form-row{grid-template-columns:minmax(0,1fr);gap:0}
   .copy{margin-left:0}
@@ -392,6 +393,10 @@ html.lb-open{overflow:hidden}
   .lb-prev{left:calc(50% - 66px)}
   .lb-next{right:calc(50% - 66px)}
   .lb-img{max-height:calc(100dvh - 300px)}
+}
+@media (max-width:520px){
+  .brand span{display:none}
+  nav a{padding:8px 9px;font-size:.88rem}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -411,6 +416,7 @@ html.lb-open{overflow:hidden}
     <nav aria-label="Main">
       <a href="#about" data-go>About</a>
       <a href="#artwork" data-go>Artwork</a>
+      <a href="projects.html">Projects</a>
       <a href="#contact" data-go>Contact</a>
     </nav>
   </div>
@@ -490,6 +496,7 @@ html.lb-open{overflow:hidden}
         <p>Characters, creatures and little worlds. Tap any piece to see it up close.</p>
       </div>
       <ol class="grid" id="grid"></ol>
+      <div class="more"><a class="btn" href="projects.html">See my projects <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
     </div>
   </section>
 
